@@ -17,26 +17,26 @@ interface GenericAction {
 }
 
 export interface AddAction extends GenericAction {
-  type: 'add';
+  type: "add";
   payload: BaseTodoItem;
 }
 
 export interface RemoveAction extends GenericAction {
-  type: 'remove';
-  payload: TodoItem['id'];
+  type: "remove";
+  payload: TodoItem["id"];
 }
 
 export interface EditAction extends GenericAction {
-  type: 'edit';
+  type: "edit";
   payload: {
-    id: TodoItem['id'],
-    todo: TodoItem['todo'],
+    id: TodoItem["id"];
+    todo: TodoItem["todo"];
   };
 }
 
 export interface ToggleCompletionAction extends GenericAction {
-  type: 'toggleCompletion';
-  payload: TodoItem['id'];
+  type: "toggleCompletion";
+  payload: TodoItem["id"];
 }
 
 export type ReducerAction =
@@ -44,5 +44,13 @@ export type ReducerAction =
   | RemoveAction
   | EditAction
   | ToggleCompletionAction;
+
+export interface IPropsTabs {
+  tabActive: string;
+  setTabActive: (tab: any) => void;
+  labels: string[];
+  defaultActive?: number;
+  classNameWrapper?: string;
+}
 
 // #endregion

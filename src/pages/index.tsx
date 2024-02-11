@@ -6,6 +6,8 @@ import { AddTodoBox } from "@/components/pages/home";
 const inter = Poppins({ weight: "500", subsets: ["latin"] });
 
 export default function Home() {
+
+
   return (
     <section
       className={`px-32 py-[2em] max-w-[1200px] mx-auto ${inter.className}`}
