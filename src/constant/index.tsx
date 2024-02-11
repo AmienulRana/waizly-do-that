@@ -1,0 +1,1 @@
+export const tabsTodo = ["All", "Pending", "Completed"];
