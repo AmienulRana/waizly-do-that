@@ -43,6 +43,11 @@ export default function AddTodoBox() {
         onFocus={() => setIsInputFocused(true)}
         onBlur={() => setIsInputFocused(false)}
         onChange={(e) => setTodoText(e.currentTarget.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            onSubmit();
+          }
+        }}
       />
 
       <div className="h-14 w-14 bg-zinc-700 text-white duration-300 hover:opacity-90 active:opacity-70 rounded-[0.3rem]">
