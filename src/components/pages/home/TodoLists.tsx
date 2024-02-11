@@ -5,6 +5,8 @@ import { useTodoContext } from "@/context/TodoContext";
 import { TodoItem } from "@/types";
 import TodoListItem from "./TodoListItem";
 import TodoListEmpty from "./TodoListEmpty";
+import ModalEditTodo from "@/components/elements/modal/ModalEditTodo";
+import useEditModal from "@/hooks/useModalEdit";
 
 interface TodoListProps {
   todoList: TodoItem[];
@@ -15,7 +17,9 @@ function TodoList({ todoList, filterBy }: TodoListProps) {
   const [editTodoItem, setEditTodoItem] = useState<TodoItem | undefined>(
     undefined
   );
+
   const { dispatch } = useTodoContext();
+  const { onClose: onCloseModal, onOpen: openModal } = useEditModal();
 
   const filteredTodoList = todoList.filter((todoItem) => {
     switch (filterBy) {
@@ -41,7 +45,13 @@ function TodoList({ todoList, filterBy }: TodoListProps) {
       },
     });
     setEditTodoItem(undefined);
+    onCloseModal();
   };
+
+  const handleEditTodoItem = (todoItem: TodoItem) => {
+    setEditTodoItem(todoItem);
+    openModal();
+  }
 
   if (filteredTodoList.length === 0) {
     return <TodoListEmpty filterOption={filterBy} />
@@ -53,22 +63,14 @@ function TodoList({ todoList, filterBy }: TodoListProps) {
           <TodoListItem
             key={todoItem.id}
             todoItem={todoItem}
-            onEdit={() => setEditTodoItem(todoItem)}
-            onDelete={() => {
-              dispatch({
-                type: "remove",
-                payload: todoItem.id,
-              });
-            }}
-            onToggleCompletion={() => {
-              dispatch({
-                type: "toggleCompletion",
-                payload: todoItem.id,
-              });
-            }}
+            onEdit={() => handleEditTodoItem(todoItem)}
+            onDelete={() => dispatch({ type: "remove", payload: todoItem.id})}
+            onToggleCompletion={() => dispatch({ type: "toggleCompletion", payload: todoItem.id})}
           />
         ))}
       </ul>
+
+      <ModalEditTodo onRename={onRename} todoItem={editTodoItem} />
     </>
   );
 }
