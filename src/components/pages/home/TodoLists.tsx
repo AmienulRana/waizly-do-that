@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useTodoContext } from "@/context/TodoContext";
 import { TodoItem } from "@/types";
 import TodoListItem from "./TodoListItem";
+import TodoListEmpty from "./TodoListEmpty";
 
 interface TodoListProps {
   todoList: TodoItem[];
@@ -41,6 +42,10 @@ function TodoList({ todoList, filterBy }: TodoListProps) {
     });
     setEditTodoItem(undefined);
   };
+
+  if (filteredTodoList.length === 0) {
+    return <TodoListEmpty filterOption={filterBy} />
+  }
   return (
     <>
       <ul className="p-0">
