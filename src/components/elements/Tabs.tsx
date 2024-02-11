@@ -3,12 +3,14 @@ import { useEffect, useRef, useState } from "react";
 
 
 export default function Tabs({
-  tabActive,
-  setTabActive,
   labels,
   classNameWrapper,
+  onChangeTabs,
   defaultActive = 0,
 }: IPropsTabs) {
+
+  const [tabActive, setTabActive] = useState("");
+
   const [indicator, setIndicator] = useState({
     width: 0,
     position: 0,
@@ -21,17 +23,17 @@ export default function Tabs({
     const buttonPosition: number = event.target.offsetLeft;
     setIndicator({ width: buttonWidth, position: buttonPosition });
     setTabActive(tab);
+    onChangeTabs?.(tab);
   };
   useEffect(() => {
     setTabActive(labels[defaultActive]);
+    onChangeTabs?.(labels[defaultActive]);
   }, [labels]);
 
   useEffect(() => {
-    // if (buttonRefs.current[defaultActive]) {
     const buttonWidth = buttonRefs.current[defaultActive].clientWidth;
     const buttonPosition = buttonRefs.current[defaultActive].offsetLeft;
     setIndicator({ width: buttonWidth, position: buttonPosition });
-    // }
   }, [labels]);
   return (
     <section className={`flex gap-5 min-w-max overflow-x-auto hide-scrollbar relative py-4 ${classNameWrapper}`}>
