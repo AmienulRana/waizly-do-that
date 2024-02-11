@@ -46,8 +46,7 @@ export type ReducerAction =
   | ToggleCompletionAction;
 
 export interface IPropsTabs {
-  tabActive: string;
-  setTabActive: (tab: any) => void;
+  onChangeTabs?: (value: any) => void;
   labels: string[];
   defaultActive?: number;
   classNameWrapper?: string;
