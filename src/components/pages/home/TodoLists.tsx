@@ -1,4 +1,4 @@
-import React, { useMemo, useReducer, useState } from "react";
+import React, { useEffect, useMemo, useReducer, useState } from "react";
 // import TodoListItem from '@/components/pages/home/TodoListItem/TodoListItem';
 // import TodoListEmptyState from './TodoListEmptyState';
 import { useTodoContext } from "@/context/TodoContext";
@@ -10,6 +10,7 @@ import useEditModal from "@/hooks/useModalEdit";
 import Tabs from "@/components/elements/Tabs";
 import reducer from "@/reducers/todoReducers";
 import { tabsTodo } from "@/constant";
+import TodoListSearch from "./TodoListSearch";
 
 type tabs = "All" | "Completed" | "Pending";
 
@@ -27,7 +28,9 @@ function TodoList({ todoList }: TodoListProps) {
 
   const [tabActive, setTabActive] = useState<tabs>("All");
 
-  const filteredTodoList = todoList.filter((todoItem) => {
+  const [data, setData] = useState(todoList);
+
+  const filteredTodoList = data.filter((todoItem) => {
     switch (tabActive) {
       case "Pending":
         return !todoItem.complete;
@@ -39,6 +42,10 @@ function TodoList({ todoList }: TodoListProps) {
         return true;
     }
   });
+
+  useEffect(() => {
+    setData(todoList);
+  }, [todoList]);
 
   const onRename = (newName: string) => {
     if (editTodoItem === undefined) return;
@@ -66,6 +73,7 @@ function TodoList({ todoList }: TodoListProps) {
         classNameWrapper="grid grid-cols-3"
         onChangeTabs={(value) => setTabActive(value)}
       />
+      <TodoListSearch setData={setData} data={todoList} />
 
       {filteredTodoList?.length === 0 ? (
         <TodoListEmpty filterOption={tabActive} />

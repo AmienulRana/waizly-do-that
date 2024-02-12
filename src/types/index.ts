@@ -25,6 +25,10 @@ export interface RemoveAction extends GenericAction {
   type: "remove";
   payload: TodoItem["id"];
 }
+export interface SearchAction extends GenericAction {
+  type: "search";
+  payload: TodoItem["id"];
+}
 
 export interface EditAction extends GenericAction {
   type: "edit";
@@ -43,7 +47,7 @@ export type ReducerAction =
   | AddAction
   | RemoveAction
   | EditAction
-  | ToggleCompletionAction;
+  | ToggleCompletionAction |  SearchAction;
 
 export interface IPropsTabs {
   onChangeTabs?: (value: any) => void;
