@@ -11,10 +11,8 @@ import TodoContext from "@/context/TodoContext";
 
 const inter = Poppins({ weight: "500", subsets: ["latin"] });
 
-type tabs = "All" | "Completed" | "Pending";
 
 export default function Home() {
-  const [tabActive, setTabActive] = useState<tabs>("All");
 
   const [todoItems, dispatch] = useReducer(reducer, []);
   return (
@@ -25,13 +23,7 @@ export default function Home() {
         <Navbar />
         <main className="sticky bg-[#121212] flex flex-col gap-[1em] z-[2] left-0 top-0">
           <AddTodoBox />
-          <Tabs
-            labels={tabsTodo}
-            classNameWrapper="grid grid-cols-3"
-            onChangeTabs={(value) => setTabActive(value)}
-          />
-
-          <TodoLists filterBy={tabActive} todoList={todoItems} />
+          <TodoLists todoList={todoItems} />
         </main>
       </section>
     </TodoContext.Provider>

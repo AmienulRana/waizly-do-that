@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useReducer, useState } from "react";
 // import TodoListItem from '@/components/pages/home/TodoListItem/TodoListItem';
 // import TodoListEmptyState from './TodoListEmptyState';
 import { useTodoContext } from "@/context/TodoContext";
@@ -7,13 +7,17 @@ import TodoListItem from "./TodoListItem";
 import TodoListEmpty from "./TodoListEmpty";
 import ModalEditTodo from "@/components/elements/modal/ModalEditTodo";
 import useEditModal from "@/hooks/useModalEdit";
+import Tabs from "@/components/elements/Tabs";
+import reducer from "@/reducers/todoReducers";
+import { tabsTodo } from "@/constant";
+
+type tabs = "All" | "Completed" | "Pending";
 
 interface TodoListProps {
   todoList: TodoItem[];
-  filterBy: "All" | "Pending" | "Completed";
 }
 
-function TodoList({ todoList, filterBy }: TodoListProps) {
+function TodoList({ todoList }: TodoListProps) {
   const [editTodoItem, setEditTodoItem] = useState<TodoItem | undefined>(
     undefined
   );
@@ -21,8 +25,10 @@ function TodoList({ todoList, filterBy }: TodoListProps) {
   const { dispatch } = useTodoContext();
   const { onClose: onCloseModal, onOpen: openModal } = useEditModal();
 
+  const [tabActive, setTabActive] = useState<tabs>("All");
+
   const filteredTodoList = todoList.filter((todoItem) => {
-    switch (filterBy) {
+    switch (tabActive) {
       case "Pending":
         return !todoItem.complete;
 
@@ -51,24 +57,35 @@ function TodoList({ todoList, filterBy }: TodoListProps) {
   const handleEditTodoItem = (todoItem: TodoItem) => {
     setEditTodoItem(todoItem);
     openModal();
-  }
+  };
 
-  if (filteredTodoList.length === 0) {
-    return <TodoListEmpty filterOption={filterBy} />
-  }
   return (
     <>
-      <ul className="p-0">
-        {filteredTodoList.map((todoItem) => (
-          <TodoListItem
-            key={todoItem.id}
-            todoItem={todoItem}
-            onEdit={() => handleEditTodoItem(todoItem)}
-            onDelete={() => dispatch({ type: "remove", payload: todoItem.id})}
-            onToggleCompletion={() => dispatch({ type: "toggleCompletion", payload: todoItem.id})}
-          />
-        ))}
-      </ul>
+      <Tabs
+        labels={tabsTodo}
+        classNameWrapper="grid grid-cols-3"
+        onChangeTabs={(value) => setTabActive(value)}
+      />
+
+      {filteredTodoList?.length === 0 ? (
+        <TodoListEmpty filterOption={tabActive} />
+      ) : (
+        <ul className="p-0">
+          {filteredTodoList.map((todoItem: TodoItem) => (
+            <TodoListItem
+              key={todoItem.id}
+              todoItem={todoItem}
+              onEdit={() => handleEditTodoItem(todoItem)}
+              onDelete={() =>
+                dispatch({ type: "remove", payload: todoItem.id })
+              }
+              onToggleCompletion={() =>
+                dispatch({ type: "toggleCompletion", payload: todoItem.id })
+              }
+            />
+          ))}
+        </ul>
+      )}
 
       <ModalEditTodo onRename={onRename} todoItem={editTodoItem} />
     </>

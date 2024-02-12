@@ -1,6 +1,6 @@
 import useJoinModal from "@/hooks/useModalEdit";
 import Modal from "./Modal";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { TodoItem } from "@/types";
 
@@ -12,6 +12,10 @@ interface IEditModalProps {
 export default function ModalEditTodo({ todoItem, onRename }: IEditModalProps) {
   const { isOpen, onClose } = useJoinModal();
   const [newName, setNewName] = useState(todoItem?.todo ?? "");
+
+  useEffect(() => {
+    setNewName(todoItem?.todo!);
+  }, [todoItem])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
